@@ -1,0 +1,3 @@
+sed -i 's/[*+]//g' data.csv
+sed -i 's/ \\/\\/g' data.csv
+sed -i 's/\\/,/g' data.csv
