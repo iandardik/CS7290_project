@@ -5,7 +5,7 @@ Author: Ian Dardik
 I worked with Quay Dragon for this project.  Although we ended up creating different models and writing separate code, we discussed our work and created our final presentation together.  
 
 ## Introduction
-My project is creating a Bayesian model for the number of fantasy football points that NFL players will score from rushing.  I have implemented both an unpooled and partially pooled model in Pyro, and I have included an earlier version in PyMC3 as well.  
+My project is creating a Bayesian model for the number of fantasy football points that NFL players will score from rushing.  I have implemented both an pooled and partially pooled model in Pyro, and I have included an earlier version in PyMC3 as well.  
 
 ## Updates since the final presentation
 Here is the check list I presented on the final presentation:
@@ -16,9 +16,9 @@ I ended up choosing a constant to serve as the "points-per-attempt" multiplier. 
 1. Variables need to converge.  
 The variables in both models now have no divergences and behave better now.  In the hierarchical model, I replace Normal distributions with LogNormal distributions in most places which may a helping factor.  
 1. Write a hierarchical model.  
-My "main" model is now hierarchical, where all 32 NFL teams are partially pooled on the alpha/beta priors to the Beta distribution for percent attempts, and on the mu (mean) prior for the number of attempts per team.  The results do seem to be better than the unpooled model.  
+My "main" model is now hierarchical, where all 32 NFL teams are partially pooled on the alpha/beta priors to the Beta distribution for percent attempts, and on the mu (mean) prior for the number of attempts per team.  The results do seem to be better than the pooled model.  
 1. Potentially translate the code to Pyro.  
-I did end up translating the unpooled model to Pyro and the code does look cleaner.  I eventually created a partially pooled model as well in Pyro.  
+I did end up translating the pooled model to Pyro and the code does look cleaner.  I eventually created a partially pooled model as well in Pyro.  
 
 ## Data
 Here is the sequence of steps I took to scrape and clean the data:
@@ -31,15 +31,15 @@ Here is the sequence of steps I took to scrape and clean the data:
 I will also note that it was helpful to visualize the data in excel using [this file](https://github.com/iandardik/CS7290_project/blob/master/data_analysis.xlsx).  
 
 ## Models
-I have included two Jupyter Notebooks:
-1. [Unpooled Pyro](cs7290_ff_pyro_flat.ipynb)
-1. [Partially pooled Pyro](cs7290_ff_pyro_hier.ipynb)
+I have included two Jupyter Notebooks.  Please read them in order; I have written them assuming the reader will read the Pooled Pyro notebook followed by the Partially Pooled Pyro notebook.  
+1. [Pooled Pyro](cs7290_ff_pyro_flat.ipynb)
+1. [Partially Pooled Pyro](cs7290_ff_pyro_hier.ipynb)
 
 ## Results
-Models were judged based on the square root of Mean Squared Error (MSE).  The unpooled version has a sqrt(MSE) around 70 while the partially pooled model has a sqrt(MSE) around 60.  
+Models were judged based on the square root of Mean Squared Error (MSE).  The pooled version has a sqrt(MSE) around 70 while the partially pooled model has a sqrt(MSE) around 60.  
 
 ## Discussion
-Without WAIC or cross-validation it is tough to make a good comparison of the models, however the sqrt(MSE) is around 10 points lower for the partially pooled model which indicates it may be the better model.  One clear advantage that the partially pooled model has over the unpooled is that we can generate a points distribution by conditioning on players' teams; in the unpooled model we create a ranking using E(P(points|team attempt %)), while in the partially pooled model we create a ranking using E(P(points|team attempt %,team)).  
+Without WAIC or cross-validation it is tough to make a good comparison of the models, however the sqrt(MSE) is around 10 points lower for the partially pooled model which indicates it may be the better model.  One clear advantage that the partially pooled model has over the pooled is that we can generate a points distribution by conditioning on players' teams; in the pooled model we create a ranking using E(P(points|team attempt %)), while in the partially pooled model we create a ranking using E(P(points|team attempt %,team)).  
 
 Unfortunately, at a sqrt(MSE) of around 60 and 70, the error rate of the model is rather high.  However, this meets my expectations because predicting fantasy football points is tough.  The player ranking lists that the models generate look much like the player rankings that ESPN might generate before the start of the season, and these lists never do a *great* job at predicting player rankings either.  
 
