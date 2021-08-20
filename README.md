@@ -9,28 +9,31 @@ My project is creating a Bayesian model for the number of fantasy football point
 
 ## Updates since the final presentation
 Here is the check list I presented on the final presentation:
-1. WAIC.  I was not able to get this working in time so I simply used MSE for comparing models.  
-1. Work on the Attempts -> Points part of the model.  I ended up choosing a constant to serve as the "points-per-attempt" multiplier.  I chose 0.8 which seems to work well.  Ideally I would like to explore the points-per-attempt concept further, perhaps as a variable in the model.  Unfortunately I did not have time for this exploration.  
-1. Variables need to converge.  The variables in the hierarchical model seem to do a better job converging.  I also mostly use LogNormal distributions instead of Normal which may a helping factor.  
-1. Write a hierarchical model.  My "main" model is now hierarchical, where all 32 NFL teams are partially pooled on the alpha/beta priors to the Beta distribution for percent attempts, and on the mu (mean) prior for the number of attempts per team.  The results do seem to be better than the unpooled model.  
-1. Potentially translate the code to Pyro.  I did end up translating the unpooled model to Pyro and the code does look cleaner.  I eventually created a partially pooled model as well in Pyro.  
+1. WAIC.  
+I was not able to get this working in time so I simply used Mean Squared Error (MSE) for comparing models.  
+1. Work on the Attempts -> Points part of the model.  
+I ended up choosing a constant to serve as the "points-per-attempt" multiplier.  I chose 0.8 which seems to work well.  Ideally I would like to explore the points-per-attempt concept further, perhaps as a variable in the model.  Unfortunately I did not have time for this exploration.  
+1. Variables need to converge.  
+The variables in both models now have no divergences and behave better now.  In the hierarchical model, I replace Normal distributions with LogNormal distributions in most places which may a helping factor.  
+1. Write a hierarchical model.  
+My "main" model is now hierarchical, where all 32 NFL teams are partially pooled on the alpha/beta priors to the Beta distribution for percent attempts, and on the mu (mean) prior for the number of attempts per team.  The results do seem to be better than the unpooled model.  
+1. Potentially translate the code to Pyro.  
+I did end up translating the unpooled model to Pyro and the code does look cleaner.  I eventually created a partially pooled model as well in Pyro.  
 
 ## Data
 Here is the sequence of steps I took to scrape and clean the data:
-1. I manually copied and pasted the data from https://www.pro-football-reference.com/years/2020/rushing.htm using the "Share & Export" -> "Get table as CSV (for Excel)" option. 
-1. I copied 20 years worth of data into a single file called "raw_data.csv": https://github.com/iandardik/CS7290_project/blob/master/raw_data.csv 
-1. I then cleaned up a few random characters of "raw_data.csv" using the "sed" linux program (see the exact commands in https://github.com/iandardik/CS7290_project/blob/master/clean_commands.txt).  
-1. I then used a python script to added the "Next Year" columns, i.e. stats such as Attempts and Points that each player will score in the subsequent year.  Here is the script: https://github.com/iandardik/CS7290_project/blob/master/kv_data.py.  This script outputs a file called "data.csv": https://github.com/iandardik/CS7290_project/blob/master/data.csv
+1. I manually copied and pasted the data from [here](https://www.pro-football-reference.com/years/2020/rushing.htm) using the "Share & Export" -> "Get table as CSV (for Excel)" option. 
+1. I copied the past 20 years of data into a single file called [raw_data.csv](https://github.com/iandardik/CS7290_project/blob/master/raw_data.csv)
+1. I then cleaned up a few random characters of raw_data.csv using the "sed" linux program (see the exact commands [here](https://github.com/iandardik/CS7290_project/blob/master/clean_commands.txt)).  
+1. I then used a python script to add the "Next Year" columns, i.e. stats such as Attempts and Points that each player will score in the subsequent year.  Here is the [script](https://github.com/iandardik/CS7290_project/blob/master/kv_data.py).  This script outputs a file called [data.csv](https://github.com/iandardik/CS7290_project/blob/master/data.csv). 
 1. All of my Jupyter notebooks use data.csv from my github repository and perform additional clean up to the data.  The additional clean up is covered in the notebooks themselves.  
 
-I will also note that it was helpful to visualize the data in excel: https://github.com/iandardik/CS7290_project/blob/master/data_analysis.xlsx.  
+I will also note that it was helpful to visualize the data in excel using [this file](https://github.com/iandardik/CS7290_project/blob/master/data_analysis.xlsx).  
 
 ## Models
-I have included three Jupyter Notebooks:
-1. Unpooled Pyro
-1. Partially pooled Pyro
-1. Unpooled PyMC3.  This is just for reference and not part of the results.  
-TODO include links to notebooks and model diagrams
+I have included two Jupyter Notebooks:
+1. [Unpooled Pyro](cs7290_ff_pyro_flat.ipynb)
+1. [Partially pooled Pyro](cs7290_ff_pyro_hier.ipynb)
 
 ## Results
 Models were judged based on the square root of Mean Squared Error (MSE).  The unpooled version has a sqrt(MSE) around 70 while the partially pooled model has a sqrt(MSE) around 60.  
